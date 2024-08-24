@@ -60,12 +60,10 @@ for temperatura_media in temperaturas_medias:
         total_mes = 0
     
 print(temperaturas_por_mes)
-legendas = []
+legendas = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
 valores = []
 
-for temperatura_por_mes in temperaturas_por_mes:
-    legendas.append(temperatura_por_mes[0])
-    valores.append(temperatura_por_mes[1])
+[valores.append(temperatura_por_mes[1]) for temperatura_por_mes in temperaturas_por_mes]
 
 plt.bar(legendas, valores)
 plt.show()
