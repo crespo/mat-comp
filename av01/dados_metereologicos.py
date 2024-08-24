@@ -17,28 +17,6 @@ for i in range(len(dados_temperatura_minima)):
     temperatura_media = (temperatura_maxima + temperatura_minima) / 2
     temperaturas_medias.append(temperatura_media)
 
-
-def diasValidos(lista):
-    lista = [str(i) for i in lista]
-    diasValidos = ['validos']
-    sequencia = 0
-    for item in lista:
-        sequencia += 1
-        if item[0] == 'n':
-            if diasValidos[-1] != 'invalidos':
-                diasValidos.append(sequencia)
-                sequencia = 0
-                diasValidos.append('invalidos')
-        else:
-            if diasValidos[-1] != 'validos':
-                diasValidos.append(sequencia)
-                sequencia = 0
-                diasValidos.append('validos')
-
-    diasValidos.append(sequencia)
-    return diasValidos
-
-
 def verificacoesPorMes(dados_data):
     linhasPorMeses = []
     mes_atual = ''
@@ -59,14 +37,13 @@ def verificacoesPorMes(dados_data):
     return linhasPorMeses
 
 
-diasValidos = diasValidos(temperaturas_medias)
 verificacoesPorMes = verificacoesPorMes(dados_data)
 
 total_mes = 0
 contador = 0
 indice_atual = 0
 temperaturas_por_mes = []
-diasInvalidos = 0
+verificacoes_invalidas = 0
 for temperatura_media in temperaturas_medias:
     mes_atual = verificacoesPorMes[indice_atual]
     contador += 1
@@ -74,11 +51,10 @@ for temperatura_media in temperaturas_medias:
         if not math.isnan(temperatura_media):
             total_mes += temperatura_media
         else:
-            diasInvalidos += 1
+            verificacoes_invalidas += 1
     else:
-        temperaturas_por_mes.append([mes_atual[0], round(total_mes / (mes_atual[1] - diasInvalidos), 1)])
-        print(diasInvalidos)
-        diasInvalidos = 0
+        temperaturas_por_mes.append([mes_atual[0], round(total_mes / (mes_atual[1] - verificacoes_invalidas), 1)])
+        verificacoes_invalidas = 0
         contador = 0
         indice_atual += 1
         total_mes = 0
