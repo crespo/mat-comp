@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import pandas as pd
+import math
 
 arquivo = './dados_inmet.csv'
 planilha = pd.read_csv(arquivo, sep=',')
@@ -65,20 +66,33 @@ total_mes = 0
 contador = 0
 indice_atual = 0
 temperaturas_por_mes = []
+diasInvalidos = 0
 for temperatura_media in temperaturas_medias:
     mes_atual = verificacoesPorMes[indice_atual]
     contador += 1
     if contador < mes_atual[1]:
-        total_mes += temperatura_media
+        if not math.isnan(temperatura_media):
+            total_mes += temperatura_media
+        else:
+            diasInvalidos += 1
     else:
-        temperaturas_por_mes.append([mes_atual[0], round(total_mes / mes_atual[1], 1)])
+        temperaturas_por_mes.append([mes_atual[0], round(total_mes / (mes_atual[1] - diasInvalidos), 1)])
+        print(diasInvalidos)
+        diasInvalidos = 0
         contador = 0
         indice_atual += 1
         total_mes = 0
-
+    
 print(temperaturas_por_mes)
+legendas = []
+valores = []
 
-# plt.bar(legendas, valores)
+for temperatura_por_mes in temperaturas_por_mes:
+    legendas.append(temperatura_por_mes[0])
+    valores.append(temperatura_por_mes[1])
+
+plt.bar(legendas, valores)
+plt.show()
 
 
 
