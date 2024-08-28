@@ -27,45 +27,46 @@ def verificacoesPorMes(dados_data):
             mes_atual = mes_loop
             linhas += 1
         elif mes_atual != mes_loop:
-            linhasPorMeses.append([mes_atual, linhas])
+            linhasPorMeses.append(linhas)
             mes_atual = mes_loop
             linhas = 1
         else:
             linhas += 1
 
-    linhasPorMeses.append([mes_atual, linhas])
+    linhasPorMeses.append(linhas)
     return linhasPorMeses
 
 
 verificacoesPorMes = verificacoesPorMes(dados_data)
 
-total_mes = 0
 contador = 0
 indice_atual = 0
 temperaturas_por_mes = []
-verificacoes_invalidas = 0
+temperaturas_para_media = []
+
 for temperatura_media in temperaturas_medias:
-    mes_atual = verificacoesPorMes[indice_atual]
+    verificacoes = verificacoesPorMes[indice_atual]
     contador += 1
-    if contador < mes_atual[1]:
+    if contador < verificacoes:
         if not math.isnan(temperatura_media):
-            total_mes += temperatura_media
-        else:
-            verificacoes_invalidas += 1
+            temperaturas_para_media.append(temperatura_media)
     else:
-        temperaturas_por_mes.append([mes_atual[0], round(total_mes / (mes_atual[1] - verificacoes_invalidas), 1)])
-        verificacoes_invalidas = 0
+        if temperaturas_para_media == []:
+            temperaturas_por_mes.append(0)
+        else:
+            temperaturas_para_media = pd.Series(temperaturas_para_media)
+            temperaturas_por_mes.append(round(temperaturas_para_media.mean(), 1))
+        
+        temperaturas_para_media = []
         contador = 0
         indice_atual += 1
-        total_mes = 0
+
     
-print(temperaturas_por_mes)
-legendas = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
-valores = []
 
-[valores.append(temperatura_por_mes[1]) for temperatura_por_mes in temperaturas_por_mes]
+meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
 
-plt.bar(legendas, valores)
+
+plt.bar(meses, temperaturas_por_mes)
 plt.show()
 
 
